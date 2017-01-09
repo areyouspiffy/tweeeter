@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="iso-8859-1">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600,800" rel="stylesheet">
+    </head>
+
+    <body>
+        <style type="text/css">
+            html,
+            body,
+            .container {
+                font-size: 1em;
+                font-family: 'Open Sans', sans-serif;
+                margin: 0;
+                width: 100vw;
+                height: 100vh;
+                text-align: center;
+                box-sizing: border-box;
+                border: 0 solid black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 10%;
+            }
+
+            .stat {
+                min-width: 9rem;
+                min-height: 6rem;
+                padding: 10px;
+                border: 1px solid black;
+                margin: 15px;
+            }
+
+            .stat .stat-label {
+                border-bottom: 1px solid black;
+            }
+
+            .stat .stat-data-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                padding: 10px;
+            }
+
+            .stat .stat-data-container.wrap {
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .stat .stat-data-block {
+                background-color: hsl(210, 100%, 50%);
+                border: 1px solid hsl(210, 100%, 30%);
+                padding: 5px;
+                border-radius: 2px;
+                color: white;
+                margin: 4px;
+            }
+        </style>
+        <div class="container">
+
+            <!--<h1>Tweets</h1>-->
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Total</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="total_tweets"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Per Second</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="tweets_per_second"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Per Minute</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="tweets_per_minute"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Per Hour</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="tweets_per_hour"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>With URLs</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="tweets_with_urls"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>With Photo URLs</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="tweets_with_photo_urls"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>With Emoji</p>
+                </div>
+                <div class="stat-data-container">
+                    <span id="percent_tweets_with_emoji"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Top Emoji</p>
+                </div>
+                <div class="stat-data-container wrap" id="emoji">
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                    <span class="stat-data"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Top Hashtags</p>
+                </div>
+                <div class="stat-data-container wrap" id="hashtags">
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    <p>Top Domains</p>
+                </div>
+                <div class="stat-data-container wrap" id="domains">
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                    <span class="stat-data stat-data-block"></span>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+
+      var total_tweets = document.getElementById("total_tweets");
+      var tweets_per_second = document.getElementById("tweets_per_second");
+      var tweets_per_minute = document.getElementById("tweets_per_minute");
+      var tweets_per_hour = document.getElementById("tweets_per_hour");
+      var tweets_with_urls = document.getElementById("tweets_with_urls");
+      var tweets_with_photo_urls = document.getElementById("tweets_with_photo_urls");
+      var percent_tweets_with_emoji = document.getElementById("percent_tweets_with_emoji");
+      var emoji = document.getElementById("emoji");
+      var hashtags = document.getElementById("hashtags");
+      var domains = document.getElementById("domains");
+
+      function updateTopFn(elem) {
+        var emap = {};
+        var espan = elem.children;
+        return function (t) {
+          var earr = t.split('|');
+          for (var i in earr) {
+            var e = earr[i];
+            if (!emap[e]) emap[e] = e;
+            espan[i].innerHTML = e;
+          }
+        }
+      }
+
+      var updateEmoji = updateTopFn(emoji);
+      var updateHashtags = updateTopFn(hashtags);
+      var updateDomains = updateTopFn(domains);
+
+      var regex = /((.+):(.*)\n)/gi;
+
+      var e = new EventSource("http://localhost:9000/sse");
+      e.onmessage = function (evt) {
+        var match;
+        while ((match = regex.exec(evt.data)) !== null) {
+          var text = match[3].trim();
+          var elem;
+          switch (match[2]) {
+            case "te":
+              updateEmoji(text);
+              elem = null;
+              break;
+            case "th":
+              updateHashtags(text);
+              elem = null;
+              break;
+            case "td":
+              updateDomains(text);
+              elem = null;
+              break;
+            case "puc":
+              elem = tweets_with_photo_urls;
+              break;
+            case "uc":
+              elem = tweets_with_urls;
+              break;
+            case "tpm":
+              elem = tweets_per_minute;
+              break;
+            case "tph":
+              elem = tweets_per_hour;
+              break;
+            case "pe":
+              elem = percent_tweets_with_emoji;
+              break;
+            case "tps":
+              elem = tweets_per_second;
+              break;
+            case "tt":
+              elem = total_tweets;
+              break;
+          }
+          if (elem !== null) elem.innerText = text;
+        }
+      }
+    </script>
+
+</html>
