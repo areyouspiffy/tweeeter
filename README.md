@@ -13,7 +13,6 @@ You should see something like this
 
 ### Walkthrough
   - [TweeeterApp](core/src/main/scala/com/brianmowen/tweeeter/TweeeterApp.scala) - Entry Point to the application. 
-  - [TweeeterApp](core/src/main/scala/com/brianmowen/tweeeter/) - Entry Point to the application. 
   - [TweetStatModel](core/src/main/scala/com/brianmowen/tweeeter/TweetStatModel.scala) - A simple model of the statistics to collect. 
   - [TweeeterProtocol](core/src/main/scala/com/brianmowen/tweeeter/TweeeterProtocol.scala) - JSON marshalling using [spray-json](https://github.com/spray/spray-json). 
   - [TweeeterSettings](core/src/main/scala/com/brianmowen/tweeeter/TweeeterApp.scala) - Settings loaded from [application.conf](core/src/main/resources/application.conf). 
