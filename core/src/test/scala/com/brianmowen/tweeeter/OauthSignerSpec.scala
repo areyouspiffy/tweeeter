@@ -6,6 +6,13 @@ import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, WordSpecLike}
 
 class OauthSignerSpec extends WordSpecLike with Matchers  {
+
+  class OauthSignerTestImpl(consumerKey: String, consumerSecret: String, token: String, tokenSecret: String) extends OauthSigner(consumerKey, consumerSecret, token, tokenSecret) {
+    override def nonce = "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg"
+    override def timestamp = "1318622958"
+    override def bodyParams(request: HttpRequest): Map[String, String] = Map("status" -> "Hello Ladies + Gentlemen, a signed OAuth request!")
+  }
+
   "Signer" must {
     "create a valid oauth string" in {
       val settings = TweeeterSettings()
@@ -32,7 +39,7 @@ class OauthSignerSpec extends WordSpecLike with Matchers  {
           |  }
         """.stripMargin))
 
-      val signer = new OauthSigner(consumerKey = settings.consumerKey,
+      val signer = new OauthSignerTestImpl(consumerKey = settings.consumerKey,
         consumerSecret = settings.consumerSecret,
         token = settings.token,
         tokenSecret = settings.tokenSecret)

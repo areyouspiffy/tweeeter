@@ -18,7 +18,7 @@ object OauthSigner {
   }
 }
 
-class OauthSigner(consumerKey: String, consumerSecret: String, token: String, tokenSecret: String) {
+abstract class OauthSigner(consumerKey: String, consumerSecret: String, token: String, tokenSecret: String) {
 
   import OauthSigner.Implicits._
 
@@ -28,8 +28,8 @@ class OauthSigner(consumerKey: String, consumerSecret: String, token: String, to
   private[tweeeter] def encode(k: String) = URLEncoder.encode(k, "UTF-8").replace("+", "%20")
   private[tweeeter] def encodeMap(m: TreeMap[String, String]) = m.map { case (k,v) => encode(k) -> encode(v) }
 
-  private def nonce = System.nanoTime.toString
-  private def timestamp = (System.currentTimeMillis / 1000).toString
+  protected def nonce = System.nanoTime.toString
+  protected def timestamp = (System.currentTimeMillis / 1000).toString
 
   def signRequest(request: HttpRequest): HttpRequest = request.addHeader(RawHeader("Authorization", genHeader(request)))
 
@@ -55,8 +55,10 @@ class OauthSigner(consumerKey: String, consumerSecret: String, token: String, to
     )
   }
 
+  protected def bodyParams(request: HttpRequest): Map[String, String] = Map.empty
+
   def signingParameters(request: HttpRequest): TreeMap[String, String] =
-    TreeMap[String,String]() ++ request.uri.query().toMap
+    TreeMap[String,String]() ++ request.uri.query().toMap ++ bodyParams(request)
 
   def signableParamterString(s: TreeMap[String, String]): String = encodeMap(s).map { case (a, b) => a + "=" + b }.mkString("&")
 
@@ -70,5 +72,10 @@ class OauthSigner(consumerKey: String, consumerSecret: String, token: String, to
     val fin      = java.util.Base64.getEncoder.encodeToString(sigBytes)
     fin
   }
+}
+
+class OauthSignerImpl(consumerKey: String, consumerSecret: String, token: String, tokenSecret: String) extends OauthSigner(consumerKey, consumerSecret, token, tokenSecret) {
+  override def nonce = System.nanoTime.toString
+  override def timestamp = (System.currentTimeMillis / 1000).toString
 }
 

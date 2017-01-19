@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.ActorMaterializer
 import com.brianmowen.tweeeter.client.ClientImpl
-import com.brianmowen.tweeeter.helpers.OauthSigner
+import com.brianmowen.tweeeter.helpers.OauthSignerImpl
 import com.brianmowen.tweeeter.logic.TweetAccumulator
 
 import scala.concurrent.Promise
@@ -16,7 +16,7 @@ object TweeeterApp extends App with HttpSupport {
   implicit val materializer = ActorMaterializer()
 
   val settings = TweeeterSettings()
-  val signer   = new OauthSigner(settings.consumerKey, settings.consumerSecret, settings.token, settings.tokenSecret)
+  val signer   = new OauthSignerImpl(settings.consumerKey, settings.consumerSecret, settings.token, settings.tokenSecret)
 
   val client = new ClientImpl(settings, signer)
 
